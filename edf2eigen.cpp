@@ -1,11 +1,11 @@
 /*
 ***************************************************************************
 *
-* Author: LetMeFly Tisfy
+* Author: LetMeFly Tisfy & Teunis van Beelen
 *
-* Copyright (C) 2022 LetMeFly Tisfy
+* Copyright (C) 2022 LetMeFly Tisfy & Teunis van Beelen
 *
-* Tisfy@foxmail.com
+* Tisfy@foxmail.com & teuniz@gmail.com
 *
 ***************************************************************************
 *
