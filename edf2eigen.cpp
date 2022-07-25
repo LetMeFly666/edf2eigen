@@ -28,6 +28,9 @@
 *
 ***************************************************************************
 */
+#include <Eigen/Dense>
+#include <iostream>
+#include <vector>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -35,8 +38,12 @@
 #include <malloc.h>
 #endif
 #include <locale.h>
+using namespace std;
+using Eigen::MatrixXd;
 
 void utf8_to_latin1(char*);
+MatrixXd vector2eigen(vector<double>);
+int main_origin(int, char* []);
 
 struct edfparamblock {
     int smp_per_record;
@@ -51,9 +58,19 @@ struct edfparamblock {
     double sense;
 } *edfparam;
 
+vector<double> val;
+MatrixXd mat;
 
+int main(int argc, char* argv[]) {
+    int code = main_origin(argc, argv);
+    if (code)
+        return 1;
+    mat = vector2eigen(val);
+    cout << mat << endl;
+    return 0;
+}
 
-int main(int argc, char* argv[])
+int main_origin(int argc, char* argv[])
 {
     FILE* inputfile,
         * outputfile,
@@ -111,12 +128,10 @@ int main(int argc, char* argv[])
 
     if (argc != 2)
     {
-        printf("%c", argc);
+        printf("%d", argc);
 
-        printf("\nEDF(+) or BDF(+) to ASCII converter version 1.4\n"
-            "Copyright 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018 Teunis van Beelen\n"
-            "teuniz@gmail.com\n"
-            "Usage: edf2ascii <filename>\n\n");
+        printf("\nEDF(+) or BDF(+) to Eigen converter version 0.0.1\n"
+            "Usage: edf2eigen <filename>\n\n");
         return(1);
     }
 
@@ -849,7 +864,9 @@ int main(int argc, char* argv[])
                         value_tmp = (var.one_signed + edfparam[j].offset) * edfparam[j].sense;
                     }
 
-                    fprintf(outputfile, "%f %d 4 * BUF1[] + SF!\r", value_tmp, zq);
+                    // FIXME: Main Here
+                    //fprintf(outputfile, "%f %d 4 * BUF1[] + SF!\r", value_tmp, zq);
+                    val.push_back(value_tmp);
                     zq += 1;
                     if (zq == 95020)
                         return(0);
@@ -911,13 +928,6 @@ int main(int argc, char* argv[])
 
     return(0);
 }
-
-
-
-
-
-
-
 
 void utf8_to_latin1(char* utf8_str)
 {
@@ -994,4 +1004,12 @@ void utf8_to_latin1(char* utf8_str)
     {
         str[j] = 0;
     }
+}
+
+MatrixXd vector2eigen(vector<double> v) {
+    MatrixXd ans(v.size(), 1);
+    for (int i = 0; i < v.size(); i++) {
+        ans(i, 0) = v[i];
+    }
+    return ans;
 }
